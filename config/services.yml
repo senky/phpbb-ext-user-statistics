@@ -1,0 +1,7 @@
+services:
+    senky.userstatistics.listener:
+        class: senky\userstatistics\event\listener
+        arguments:
+            - @dbal.conn
+        tags:
+            - { name: event.listener }
