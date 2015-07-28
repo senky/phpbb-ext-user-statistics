@@ -75,7 +75,7 @@ class listener implements EventSubscriberInterface
 
 			$sql = 'SELECT r.rank_title, u.user_rank
 					FROM ' . RANKS_TABLE . ' as r, ' . USERS_TABLE . ' as u
-					WHERE u.user_id = ' . $user->data['user_id'] . '
+					WHERE u.user_id = ' . $this->user->data['user_id'] . '
 						AND rank_id = u.user_rank';
 			$result = $this->db->sql_query($sql);
 			$user_rank = $this->db->sql_fetchrow($result);
