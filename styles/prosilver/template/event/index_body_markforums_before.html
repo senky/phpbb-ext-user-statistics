@@ -1,30 +1,28 @@
 <!-- IF S_USER_LOGGED_IN -->
-<div class="forumbg">
+<div class="forumbg forumbg-table">
 	<div class="inner">
-		<ul class="topiclist">
-			<li class="header">
-				<dl class="icon">
-					<dd>{L_US_USER_IP}</dd>
-					<dd>{L_US_USER_REGDATE}</dd>
-					<dd>{L_US_USER_ID}</dd>
-					<dd>{L_US_USER_POSTS}</dd>
-					<dd>{L_US_USER_TOPICS}</dd>
-					<dd>{L_US_USER_RTITLE}</dd>
-				</dl>
-			</li>
-		</ul>
-		<ul class="topiclist topics">
-			<li class="row bg1">
-				<dl class="icon">
-					<dd>{US_IP}</dd>
-					<dd>{US_REGDATE}</dd>
-					<dd>{US_ID}</dd>
-					<dd>{US_POSTS}</dd>
-					<dd>{US_TOPICS}</dd>
-					<dd>{US_RTITLE}</dd>
-				</dl>
-			</li>
-		</ul>
+		<table class="table1 responsive">
+			<thead>
+				<tr>
+					<th>{L_US_USER_IP}</th>
+					<th>{L_US_USER_REGDATE}</th>
+					<th>{L_US_USER_ID}</th>
+					<th>{L_US_USER_POSTS}</a>
+					<th>{L_US_USER_TOPICS}</th>
+					<th>{L_US_USER_RTITLE}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="bg1" style="text-align: center">
+					<td>{US_IP}</td>
+					<td>{US_REGDATE}</td>
+					<td>{US_ID}</td>
+					<td>{US_POSTS}</td>
+					<td>{US_TOPICS}</td>
+					<td>{US_RTITLE}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
 <!-- ENDIF -->
