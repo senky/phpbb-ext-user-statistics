@@ -3,5 +3,7 @@ services:
         class: senky\userstatistics\event\listener
         arguments:
             - @dbal.conn
+            - @template
+            - @user
         tags:
             - { name: event.listener }
