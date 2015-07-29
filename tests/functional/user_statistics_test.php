@@ -54,6 +54,6 @@ class user_statistics_test extends \phpbb_functional_test_case
 		$this->logout();
 
 		$crawler = self::request('GET', 'index.php');
-		$this->assertNull($crawler->filter('#user-statistics'));
+		$this->assertEquals(0, $crawler->filter('#user-statistics')->count());
 	}
 }
