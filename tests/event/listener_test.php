@@ -10,7 +10,7 @@
 
 namespace senky\userstatistics\tests\event;
 
-class event_listener_test extends \phpbb_database_test_case
+class listener_test extends \phpbb_database_test_case
 {
 	/**
 	* Define the extensions to be tested
