@@ -10,19 +10,17 @@
 
 namespace senky\userstatistics\tests\functional;
 
-$_SERVER['PHPBB_FUNCTIONAL_URL'] = 'http://localhost/phpbb/phpBB/';
-
 /**
-* @group functional
-*/
+ * @group functional
+ */
 class user_statistics_test extends \phpbb_functional_test_case
 {
 	/**
-	* Define the extensions to be tested
-	*
-	* @return array vendor/name of extension(s) to test
-	*/
-	static protected function setup_extensions()
+	 * Define the extensions to be tested
+	 *
+	 * @return array vendor/name of extension(s) to test
+	 */
+	protected static function setup_extensions()
 	{
 		return array('senky/userstatistics');
 	}
@@ -36,8 +34,8 @@ class user_statistics_test extends \phpbb_functional_test_case
 	}
 
 	/**
-	* Test loading the user statistics for logged user
-	*/
+	 * Test loading the user statistics for logged user
+	 */
 	public function test_view_user_statistics()
 	{
 		$this->login();
@@ -47,8 +45,8 @@ class user_statistics_test extends \phpbb_functional_test_case
 	}
 
 	/**
-	* Test loading the user statistics for guests
-	*/
+	 * Test loading the user statistics for guests
+	 */
 	public function test_should_not_view_user_statistics()
 	{
 		$this->logout();

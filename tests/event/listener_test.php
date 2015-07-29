@@ -13,11 +13,11 @@ namespace senky\userstatistics\tests\event;
 class listener_test extends \phpbb_database_test_case
 {
 	/**
-	* Define the extensions to be tested
-	*
-	* @return array vendor/name of extension(s) to test
-	*/
-	static protected function setup_extensions()
+	 * Define the extensions to be tested
+	 *
+	 * @return array vendor/name of extension(s) to test
+	 */
+	protected static function setup_extensions()
 	{
 		return array('senky/userstatistics');
 	}
@@ -30,18 +30,18 @@ class listener_test extends \phpbb_database_test_case
 	protected $user;
 
 	/**
-	* Get data set fixtures
-	*
-	* @return \PHPUnit_Extensions_Database_DataSet_XmlDataSet
-	*/
+	 * Get data set fixtures
+	 *
+	 * @return \PHPUnit_Extensions_Database_DataSet_XmlDataSet
+	 */
 	public function getDataSet()
 	{
 		return $this->createXMLDataSet(dirname(__FILE__) . '/fixtures/topics_ranks_users.xml');
 	}
 
 	/**
-	* Setup test environment
-	*/
+	 * Setup test environment
+	 */
 	public function setUp()
 	{
 		parent::setUp();
@@ -69,8 +69,8 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Create our event listener
-	*/
+	 * Create our event listener
+	 */
 	protected function set_listener()
 	{
 		$this->listener = new \senky\userstatistics\event\listener(
@@ -81,8 +81,8 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Test the event listener is constructed correctly
-	*/
+	 * Test the event listener is constructed correctly
+	 */
 	public function test_construct()
 	{
 		$this->set_listener();
@@ -90,8 +90,8 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Test the event listener is subscribing events
-	*/
+	 * Test the event listener is subscribing events
+	 */
 	public function test_getSubscribedEvents()
 	{
 		$this->assertEquals(array(
@@ -100,8 +100,8 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Test the set_template_variables event for logged user
-	*/
+	 * Test the set_template_variables event for logged user
+	 */
 	public function test_set_template_variables_for_logged_user()
 	{
 		$this->set_listener();
@@ -122,8 +122,8 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Test the set_template_variables event for guest
-	*/
+	 * Test the set_template_variables event for guest
+	 */
 	public function test_set_template_variables_for_guest()
 	{
 		$this->user->data['is_registered'] = false;

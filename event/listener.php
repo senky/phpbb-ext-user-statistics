@@ -29,7 +29,9 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\autogroups\conditions\manager $manager Auto groups condition manager object
+	 * @param \phpbb\db\driver\driver_interface	$db			Database driver
+	 * @param \phpbb\template\template			$template	Template object
+	 * @param \phpbb\user						$user		User object
 	 * @access public
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
@@ -46,7 +48,7 @@ class listener implements EventSubscriberInterface
 	 * @static
 	 * @access public
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.index_modify_page_title'	=> 'set_template_variables',
