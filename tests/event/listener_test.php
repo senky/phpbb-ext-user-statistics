@@ -100,9 +100,9 @@ class listener_test extends \phpbb_database_test_case
 	}
 
 	/**
-	* Test the set_template_variables event
+	* Test the set_template_variables event for logged user
 	*/
-	public function test_set_template_variables()
+	public function test_set_template_variables_for_logged_user()
 	{
 		$this->set_listener();
 
@@ -116,6 +116,22 @@ class listener_test extends \phpbb_database_test_case
 				'US_RTITLE'		=> 'Site Admin',
 				'US_TOPICS'		=> 3,
 			));
+		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
+		$dispatcher->dispatch('core.index_modify_page_title');
+	}
+
+	/**
+	* Test the set_template_variables event for guest
+	*/
+	public function test_set_template_variables_for_guest()
+	{
+		$this->user->data['is_registered'] = false;
+
+		$this->set_listener();
+
+		$this->template->expects($this->never())
+			->method('assign_vars');
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->dispatch('core.index_modify_page_title');
