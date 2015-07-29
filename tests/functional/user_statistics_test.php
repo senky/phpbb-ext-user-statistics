@@ -36,7 +36,7 @@ class user_statistics_test extends \phpbb_functional_test_case
 	}
 
 	/**
-	* Test loading the user statistics
+	* Test loading the user statistics for logged user
 	*/
 	public function test_view_user_statistics()
 	{
@@ -44,5 +44,16 @@ class user_statistics_test extends \phpbb_functional_test_case
 
 		$crawler = self::request('GET', 'index.php');
 		$this->assertContains('Your IP', $crawler->filter('#user-statistics thead th:first-child')->text());
+	}
+
+	/**
+	* Test loading the user statistics for guests
+	*/
+	public function test_should_not_view_user_statistics()
+	{
+		$this->logout();
+
+		$crawler = self::request('GET', 'index.php');
+		$this->assertNull($crawler->filter('#user-statistics'));
 	}
 }
