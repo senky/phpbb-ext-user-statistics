@@ -44,7 +44,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Assign functions defined in this class to event listeners in the core
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 * @static
 	 * @access public
 	 */

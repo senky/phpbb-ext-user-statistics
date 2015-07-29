@@ -18,7 +18,7 @@ class user_statistics_test extends \phpbb_functional_test_case
 	/**
 	 * Define the extensions to be tested
 	 *
-	 * @return array vendor/name of extension(s) to test
+	 * @return string[] vendor/name of extension(s) to test
 	 */
 	protected static function setup_extensions()
 	{
