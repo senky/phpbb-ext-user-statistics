@@ -24,10 +24,14 @@
 
 	<table name="phpbb_users">
 		<column>user_id</column>
+		<column>user_permissions</column>
 		<column>user_rank</column>
+		<column>user_sig</column>
 		<row>
 			<value>1</value>
+			<value></value>
 			<value>1</value>
+			<value></value>
 		</row>
 	</table>
 </dataset>
