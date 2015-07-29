@@ -46,10 +46,9 @@ class listener_test extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $phpbb_dispatcher, $phpbb_extension_manager, $phpbb_root_path;
+		global $phpbb_extension_manager, $phpbb_root_path;
 
 		// Mock some global classes that may be called during code execution
-		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$phpbb_extension_manager = new \phpbb_mock_extension_manager($phpbb_root_path);
 
 		// Load/Mock classes required by the event listener class
@@ -60,9 +59,11 @@ class listener_test extends \phpbb_database_test_case
 
 		$this->user = new \phpbb\user('\phpbb\datetime');
 		$this->user->timezone = new \DateTimeZone('UTC');
+		$this->user->date_format = 'd.m.Y G:i:s';
 		$this->user->lang['datetime'] = array();
+		$this->user->data['is_registered'] = true;
 		$this->user->data['user_ip'] = '127.0.0.1';
-		$this->user->data['user_regdate'] = 946684800;
+		$this->user->data['user_regdate'] = '946684800';
 		$this->user->data['user_id'] = '1';
 		$this->user->data['user_posts'] = '20';
 	}
@@ -113,7 +114,7 @@ class listener_test extends \phpbb_database_test_case
 				'US_ID' 		=> '1',
 				'US_POSTS'		=> '20',
 				'US_RTITLE'		=> 'Site Admin',
-				'US_TOPICS'		=> '3',
+				'US_TOPICS'		=> 3,
 			));
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
