@@ -62,7 +62,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function set_template_variables($event)
 	{
-		if($this->user->data['is_registered'])
+		if ($this->user->data['is_registered'])
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
