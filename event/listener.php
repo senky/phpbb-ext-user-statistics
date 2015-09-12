@@ -58,11 +58,10 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Set required template variables
 	 *
-	 * @param object $event The event object
 	 * @return null
 	 * @access public
 	 */
-	public function set_template_variables($event)
+	public function set_template_variables()
 	{
 		if ($this->user->data['is_registered'])
 		{
