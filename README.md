@@ -4,6 +4,7 @@ This is the repository for the development of the phpBB User Statistics Extensio
 
 [![Build Status](https://travis-ci.org/Senky/phpbb-ext-user-statistics.svg?branch=develop)](https://travis-ci.org/Senky/phpbb-ext-user-statistics)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Senky/phpbb-ext-user-statistics/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Senky/phpbb-ext-user-statistics/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/Senky/phpbb-ext-user-statistics/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Senky/phpbb-ext-user-statistics/?branch=develop)
 
 ## Install
 
