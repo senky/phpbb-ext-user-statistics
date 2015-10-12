@@ -160,17 +160,16 @@ class listener_test extends \phpbb_database_test_case
 
 		// add listeners
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
 
 		// dispatch preposition
-		$dispatcher->dispatch('core.index_modify_page_title');
-		// now, user_1_topics should be cached
+		$this->cache->put('user_1_topics', '3');
 
 		$event_data = array('mode');
 		$event = new \phpbb\event\data(compact($event_data));
 		$dispatcher->dispatch('core.submit_post_end', $event);
 
+		// ensure user topics cache is destroyed
 		$this->cache->checkVarUnset($this, 'user_1_topics');
 	}
 
@@ -185,14 +184,11 @@ class listener_test extends \phpbb_database_test_case
 
 		// add listeners
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
 
 		// dispatch preposition
-		$dispatcher->dispatch('core.index_modify_page_title');
-		// now, user_1_topics should be cached
+		$this->cache->put('user_1_topics', '3');
 
-		// Mock the mode var
 		$mode = 'reply';
 		$event_data = array('mode');
 		$event = new \phpbb\event\data(compact($event_data));
