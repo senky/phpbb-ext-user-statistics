@@ -54,8 +54,7 @@ class listener_test extends \phpbb_database_test_case
 		// Load/Mock classes required by the event listener class
 		$this->cache = new \phpbb_mock_cache;
 		$this->db = $this->new_dbal();
-		$this->template = $this->getMockBuilder('\phpbb\template\template')
-			->getMock();
+		$this->template = $this->getMockBuilder('\phpbb\template\template')->getMock();
 
 		$this->user = new \phpbb\user('\phpbb\datetime');
 		$this->user->timezone = new \DateTimeZone('UTC');
@@ -108,6 +107,7 @@ class listener_test extends \phpbb_database_test_case
 	{
 		$this->set_listener();
 
+		// ensure all required template variables are set
 		$this->template->expects($this->once())
 			->method('assign_vars')
 			->with(array(
@@ -118,9 +118,13 @@ class listener_test extends \phpbb_database_test_case
 				'US_RTITLE'		=> 'Site Admin',
 				'US_TOPICS'		=> 3,
 			));
+
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->dispatch('core.index_modify_page_title');
+
+		// ensure user topics count is cached
+		$this->cache->checkVar($this, 'user_1_topics', '3');
 	}
 
 	/**
@@ -132,10 +136,69 @@ class listener_test extends \phpbb_database_test_case
 
 		$this->set_listener();
 
+		// ensure that nothing inside the set_template_variables()
+		// method is called for guest
 		$this->template->expects($this->never())
 			->method('assign_vars');
+
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->dispatch('core.index_modify_page_title');
+	}
+
+	/**
+	 * Test the clear_cache event for post method
+	 */
+	public function test_clear_cache_post()
+	{
+		$this->user->data['is_registered'] = true;
+
+		$this->set_listener();
+
+		// Mock the mode var
+		$mode = 'post';
+
+		// add listeners
+		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
+		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
+
+		// dispatch preposition
+		$dispatcher->dispatch('core.index_modify_page_title');
+		// now, user_1_topics should be cached
+
+		$event_data = array('mode');
+		$event = new \phpbb\event\data(compact($event_data));
+		$dispatcher->dispatch('core.submit_post_end', $event);
+
+		$this->cache->checkVarUnset($this, 'user_1_topics');
+	}
+
+	/**
+	 * Test the clear_cache event for other than post method
+	 */
+	public function test_clear_cache_reply()
+	{
+		$this->user->data['is_registered'] = true;
+
+		$this->set_listener();
+
+		// add listeners
+		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
+		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
+
+		// dispatch preposition
+		$dispatcher->dispatch('core.index_modify_page_title');
+		// now, user_1_topics should be cached
+
+		// Mock the mode var
+		$mode = 'reply';
+		$event_data = array('mode');
+		$event = new \phpbb\event\data(compact($event_data));
+		$dispatcher->dispatch('core.submit_post_end', $event);
+
+		// ensure user topics cache is kept
+		$this->cache->checkVar($this, 'user_1_topics', '3');
 	}
 }

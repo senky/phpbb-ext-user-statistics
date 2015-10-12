@@ -80,7 +80,7 @@ class listener implements EventSubscriberInterface
 						FROM ' . TOPICS_TABLE . '
 						WHERE topic_poster = ' . $this->user->data['user_id'];
 				$result = $this->db->sql_query($sql);
-				$user_topics = $this->db->sql_fetchrow($result);
+				$user_topics = $this->db->sql_fetchfield('user_topics');
 				$this->db->sql_freeresult($result);
 
 				$this->cache->put('user_' . $this->user->data['user_id'] . '_topics', $user_topics);
@@ -100,7 +100,7 @@ class listener implements EventSubscriberInterface
 				'US_ID'			=> $this->user->data['user_id'],
 				'US_POSTS'		=> $this->user->data['user_posts'],
 				'US_RTITLE'		=> ($user_rank['rank_title'] != '') ? $user_rank['rank_title'] : $this->user->lang('US_NO_RANK'),
-				'US_TOPICS'		=> $user_topics['user_topics'],
+				'US_TOPICS'		=> $user_topics,
 			));
 		}
 	}
