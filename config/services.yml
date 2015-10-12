@@ -2,6 +2,7 @@ services:
     senky.userstatistics.listener:
         class: senky\userstatistics\event\listener
         arguments:
+            - @cache.driver
             - @dbal.conn
             - @template
             - @user

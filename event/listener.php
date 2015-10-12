@@ -17,6 +17,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class listener implements EventSubscriberInterface
 {
+	/** @var \phpbb\cache\driver\driver_interface */
+	protected $cache;
+
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
@@ -29,13 +32,15 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface	$db			Database driver
-	 * @param \phpbb\template\template			$template	Template object
-	 * @param \phpbb\user						$user		User object
+	 * @param \phpbb\cache\driver\driver_interface	$cache		Cache driver interface
+	 * @param \phpbb\db\driver\driver_interface		$db			Database driver
+	 * @param \phpbb\template\template				$template	Template object
+	 * @param \phpbb\user							$user		User object
 	 * @access public
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
 	{
+		$this->cache = $cache;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
@@ -52,27 +57,34 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.index_modify_page_title'	=> 'set_template_variables',
+			'core.submit_post_end'			=> 'clear_cache',
 		);
 	}
 
 	/**
 	 * Set required template variables
 	 *
+	 * @param object $event The event object
 	 * @return null
 	 * @access public
 	 */
-	public function set_template_variables()
+	public function set_template_variables($event)
 	{
 		if ($this->user->data['is_registered'])
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
-			$sql = 'SELECT COUNT(topic_poster) as user_topics
-					FROM ' . TOPICS_TABLE . '
-					WHERE topic_poster = ' . $this->user->data['user_id'];
-			$result = $this->db->sql_query($sql);
-			$user_topics = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
+			if (($user_topics = $this->cache->get('user_' . $this->user->data['user_id'] . '_topics')) == false)
+			{
+				$sql = 'SELECT COUNT(topic_poster) as user_topics
+						FROM ' . TOPICS_TABLE . '
+						WHERE topic_poster = ' . $this->user->data['user_id'];
+				$result = $this->db->sql_query($sql);
+				$user_topics = $this->db->sql_fetchrow($result);
+				$this->db->sql_freeresult($result);
+
+				$this->cache->put('user_' . $this->user->data['user_id'] . '_topics', $user_topics);
+			}
 
 			$sql = 'SELECT r.rank_title, u.user_rank
 					FROM ' . RANKS_TABLE . ' as r, ' . USERS_TABLE . ' as u
@@ -90,6 +102,21 @@ class listener implements EventSubscriberInterface
 				'US_RTITLE'		=> ($user_rank['rank_title'] != '') ? $user_rank['rank_title'] : $this->user->lang('US_NO_RANK'),
 				'US_TOPICS'		=> $user_topics['user_topics'],
 			));
+		}
+	}
+
+	/**
+	 * Clear cache for user topics count
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function clear_cache($event)
+	{
+		if ($event['mode'] == 'post')
+		{
+			$this->cache->destroy('user_' . $this->user->data['user_id'] . '_topics');
 		}
 	}
 }
