@@ -52,8 +52,8 @@ class listener_test extends \phpbb_database_test_case
 		$phpbb_extension_manager = new \phpbb_mock_extension_manager($phpbb_root_path);
 
 		// Load/Mock classes required by the event listener class
+		$this->cache = new \phpbb_mock_cache;
 		$this->db = $this->new_dbal();
-
 		$this->template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
 
@@ -74,6 +74,7 @@ class listener_test extends \phpbb_database_test_case
 	protected function set_listener()
 	{
 		$this->listener = new \senky\userstatistics\event\listener(
+			$this->cache,
 			$this->db,
 			$this->template,
 			$this->user
@@ -96,6 +97,7 @@ class listener_test extends \phpbb_database_test_case
 	{
 		$this->assertEquals(array(
 			'core.index_modify_page_title',
+			'core.submit_post_end',
 		), array_keys(\senky\userstatistics\event\listener::getSubscribedEvents()));
 	}
 
