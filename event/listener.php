@@ -56,8 +56,12 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.index_modify_page_title'	=> 'set_template_variables',
-			'core.submit_post_end'			=> 'clear_cache',
+			'core.index_modify_page_title'		=> 'set_template_variables',
+			'core.submit_post_end'				=> 'clear_cache',
+			'core.delete_topics_after_query'	=> 'clear_cache',
+			// TODO: another clear_cache call is required when topic is
+			// soft-deleted: \phpbb\content_visibility.php@set_topic_visibility
+			// new core event needed first
 		);
 	}
 
@@ -74,17 +78,13 @@ class listener implements EventSubscriberInterface
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
-			if (($user_topics = $this->cache->get('user_' . $this->user->data['user_id'] . '_topics')) == false)
-			{
-				$sql = 'SELECT COUNT(topic_poster) as user_topics
-						FROM ' . TOPICS_TABLE . '
-						WHERE topic_poster = ' . $this->user->data['user_id'];
-				$result = $this->db->sql_query($sql);
-				$user_topics = $this->db->sql_fetchfield('user_topics');
-				$this->db->sql_freeresult($result);
-
-				$this->cache->put('user_' . $this->user->data['user_id'] . '_topics', $user_topics);
-			}
+			$sql = 'SELECT COUNT(topic_poster) as user_topics
+					FROM ' . TOPICS_TABLE . '
+					WHERE topic_poster = ' . $this->user->data['user_id'] . '
+						AND topic_visibility = ' . ITEM_APPROVED;
+			$result = $this->db->sql_query($sql, 3600);
+			$user_topics = $this->db->sql_fetchfield('user_topics');
+			$this->db->sql_freeresult($result);
 
 			$sql = 'SELECT r.rank_title, u.user_rank
 					FROM ' . RANKS_TABLE . ' as r, ' . USERS_TABLE . ' as u
@@ -116,7 +116,8 @@ class listener implements EventSubscriberInterface
 	{
 		if ($event['mode'] == 'post')
 		{
-			$this->cache->destroy('user_' . $this->user->data['user_id'] . '_topics');
+			// sadly, this destroys all cache items for topics table, but phpBB doesn't provide cleaner way
+			$this->cache->destroy('sql', TOPICS_TABLE); 
 		}
 	}
 }
