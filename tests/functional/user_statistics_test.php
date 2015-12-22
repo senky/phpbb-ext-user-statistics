@@ -41,7 +41,7 @@ class user_statistics_test extends \phpbb_functional_test_case
 		$this->login();
 
 		$crawler = self::request('GET', 'index.php');
-		$this->assertContains('Your IP', $crawler->filter('#user-statistics thead th:first-child')->text());
+		$this->assertContains('Your IP', $crawler->filter('#user-statistics .statistics:first-child')->text());
 	}
 
 	/**

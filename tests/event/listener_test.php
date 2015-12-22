@@ -24,6 +24,7 @@ class listener_test extends \phpbb_database_test_case
 
 	/** @var \senky\userstatistics\event\listener */
 	protected $listener;
+	protected $sql_user_topics;
 
 	protected $db;
 	protected $template;
@@ -46,13 +47,14 @@ class listener_test extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $phpbb_extension_manager, $phpbb_root_path;
+		global $phpbb_extension_manager, $cache, $phpbb_root_path;
 
 		// Mock some global classes that may be called during code execution
 		$phpbb_extension_manager = new \phpbb_mock_extension_manager($phpbb_root_path);
+		$cache = new phpbb_cache_memory();
 
 		// Load/Mock classes required by the event listener class
-		$this->cache = new \phpbb_mock_cache;
+		$this->cache = $cache;
 		$this->db = $this->new_dbal();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')->getMock();
 
@@ -65,6 +67,11 @@ class listener_test extends \phpbb_database_test_case
 		$this->user->data['user_regdate'] = '946684800';
 		$this->user->data['user_id'] = '1';
 		$this->user->data['user_posts'] = '20';
+
+		$this->sql_user_topics = 'SELECT COUNT(topic_poster) as user_topics
+								FROM ' . TOPICS_TABLE . '
+								WHERE topic_poster = 1
+									AND topic_visibility = ' . ITEM_APPROVED;
 	}
 
 	/**
@@ -97,6 +104,7 @@ class listener_test extends \phpbb_database_test_case
 		$this->assertEquals(array(
 			'core.index_modify_page_title',
 			'core.submit_post_end',
+			'core.delete_topics_after_query',
 		), array_keys(\senky\userstatistics\event\listener::getSubscribedEvents()));
 	}
 
@@ -123,8 +131,8 @@ class listener_test extends \phpbb_database_test_case
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->dispatch('core.index_modify_page_title');
 
-		// ensure user topics count is cached
-		$this->cache->checkVar($this, 'user_1_topics', '3');
+		$query_id = $this->cache->sql_load($this->sql_user_topics);
+		$this->assertInternalType('integer', $query_id);
 	}
 
 	/**
@@ -155,46 +163,28 @@ class listener_test extends \phpbb_database_test_case
 
 		$this->set_listener();
 
-		// Mock the mode var
-		$mode = 'post';
-
 		// add listeners
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
+		$dispatcher->addListener('core.delete_topics_after_query', array($this->listener, 'clear_cache'));
 
 		// dispatch preposition
-		$this->cache->put('user_1_topics', '3');
+		$this->cache->put('sql_phpbb_topics', '1');
 
-		$event_data = array('mode');
-		$event = new \phpbb\event\data(compact($event_data));
-		$dispatcher->dispatch('core.submit_post_end', $event);
+		$dispatcher->dispatch('core.submit_post_end');
 
 		// ensure user topics cache is destroyed
-		$this->cache->checkVarUnset($this, 'user_1_topics');
-	}
+		$query_id = $this->cache->sql_load($this->sql_user_topics);
+		$this->assertFalse($query_id);
 
-	/**
-	 * Test the clear_cache event for other than post method
-	 */
-	public function test_clear_cache_reply()
-	{
-		$this->user->data['is_registered'] = true;
-
-		$this->set_listener();
-
-		// add listeners
-		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-		$dispatcher->addListener('core.submit_post_end', array($this->listener, 'clear_cache'));
-
+		// and again
 		// dispatch preposition
-		$this->cache->put('user_1_topics', '3');
+		$this->cache->put('sql_phpbb_topics', '1');
 
-		$mode = 'reply';
-		$event_data = array('mode');
-		$event = new \phpbb\event\data(compact($event_data));
-		$dispatcher->dispatch('core.submit_post_end', $event);
+		$dispatcher->dispatch('core.delete_topics_after_query');
 
-		// ensure user topics cache is kept
-		$this->cache->checkVar($this, 'user_1_topics', '3');
+		// ensure user topics cache is destroyed
+		$query_id = $this->cache->sql_load($this->sql_user_topics);
+		$this->assertFalse($query_id);
 	}
 }

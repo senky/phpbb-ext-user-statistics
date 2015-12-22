@@ -2,13 +2,17 @@
 <dataset>
 	<table name="phpbb_topics">
 		<column>topic_poster</column>
+		<column>topic_visibility</column>
 		<row>
+			<value>1</value>
 			<value>1</value>
 		</row>
 		<row>
 			<value>1</value>
+			<value>1</value>
 		</row>
 		<row>
+			<value>1</value>
 			<value>1</value>
 		</row>
 	</table>

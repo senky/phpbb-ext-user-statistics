@@ -108,16 +108,12 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Clear cache for user topics count
 	 *
-	 * @param object $event The event object
 	 * @return null
 	 * @access public
 	 */
-	public function clear_cache($event)
+	public function clear_cache()
 	{
-		if ($event['mode'] == 'post')
-		{
-			// sadly, this destroys all cache items for topics table, but phpBB doesn't provide cleaner way
-			$this->cache->destroy('sql', TOPICS_TABLE); 
-		}
+		// sadly, this destroys all cache items for topics table, but phpBB doesn't provide cleaner way
+		$this->cache->destroy('sql', TOPICS_TABLE); 
 	}
 }
