@@ -114,6 +114,6 @@ class listener implements EventSubscriberInterface
 	public function clear_cache()
 	{
 		// sadly, this destroys all cache items for topics table, but phpBB doesn't provide cleaner way
-		$this->cache->destroy('sql', TOPICS_TABLE); 
+		$this->cache->destroy('sql', TOPICS_TABLE);
 	}
 }
