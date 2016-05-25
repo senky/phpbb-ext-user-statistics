@@ -1,0 +1,11 @@
+.user_statistics {
+	width: 16.666%;
+	text-align: center;
+	display: block !important;
+}
+
+@media all and (max-width: 700px), all and (max-device-width: 700px) {
+	#user-statistics {
+		display: none;
+	}
+}
