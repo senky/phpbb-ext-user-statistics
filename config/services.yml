@@ -2,11 +2,11 @@ services:
     senky.userstatistics.listener:
         class: senky\userstatistics\event\listener
         arguments:
-            - @cache.driver
-            - @dbal.conn
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
