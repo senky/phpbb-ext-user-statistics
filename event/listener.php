@@ -29,6 +29,12 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var string */
+	protected $root_path;
+
+	/** @var string */
+	protected $php_ext;
+
 	/**
 	 * Constructor
 	 *
@@ -36,14 +42,18 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface		$db			Database driver
 	 * @param \phpbb\template\template				$template	Template object
 	 * @param \phpbb\user							$user		User object
+	 * @param string								$root_path	phpbb root path
+	 * @param string								$php_ext	php ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
 	{
 		$this->cache = $cache;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -99,8 +109,10 @@ class listener implements EventSubscriberInterface
 				'US_REGDATE'	=> $this->user->format_date($this->user->data['user_regdate']),
 				'US_ID'			=> $this->user->data['user_id'],
 				'US_POSTS'		=> $this->user->data['user_posts'],
+				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
 				'US_RTITLE'		=> ($user_rank['rank_title'] != '') ? $user_rank['rank_title'] : $this->user->lang('US_NO_RANK'),
 				'US_TOPICS'		=> $user_topics,
+				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
 			));
 		}
 	}
