@@ -88,6 +88,11 @@ class listener implements EventSubscriberInterface
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
+			if (!function_exists('phpbb_get_user_rank'))
+			{
+				require($this->root_path . 'includes/functions_display.' . $this->php_ext);
+			}
+
 			// topics count
 			$sql = 'SELECT COUNT(topic_poster) as user_topics
 					FROM ' . TOPICS_TABLE . '

@@ -79,11 +79,15 @@ class listener_test extends \phpbb_database_test_case
 	 */
 	protected function set_listener()
 	{
+		global $phpbb_root_path, $phpEx;
+
 		$this->listener = new \senky\userstatistics\event\listener(
 			$this->cache,
 			$this->db,
 			$this->template,
-			$this->user
+			$this->user,
+			$phpbb_root_path,
+			$phpEx
 		);
 	}
 
