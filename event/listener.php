@@ -88,6 +88,7 @@ class listener implements EventSubscriberInterface
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
+			// topics count
 			$sql = 'SELECT COUNT(topic_poster) as user_topics
 					FROM ' . TOPICS_TABLE . '
 					WHERE topic_poster = ' . $this->user->data['user_id'] . '
@@ -96,13 +97,7 @@ class listener implements EventSubscriberInterface
 			$user_topics = $this->db->sql_fetchfield('user_topics');
 			$this->db->sql_freeresult($result);
 
-			$sql = 'SELECT r.rank_title, u.user_rank
-					FROM ' . RANKS_TABLE . ' as r, ' . USERS_TABLE . ' as u
-					WHERE u.user_id = ' . $this->user->data['user_id'] . '
-						AND rank_id = u.user_rank';
-			$result = $this->db->sql_query($sql);
-			$user_rank = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
+			$user_rank = phpbb_get_user_rank($this->user->data, $this->user->data['user_posts']);
 
 			$this->template->assign_vars(array(
 				'US_IP'			=> $this->user->data['user_ip'],
@@ -110,7 +105,7 @@ class listener implements EventSubscriberInterface
 				'US_ID'			=> $this->user->data['user_id'],
 				'US_POSTS'		=> $this->user->data['user_posts'],
 				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
-				'US_RTITLE'		=> ($user_rank['rank_title'] != '') ? $user_rank['rank_title'] : $this->user->lang('US_NO_RANK'),
+				'US_RTITLE'		=> ($user_rank['title'] != '') ? $user_rank['title'] : $this->user->lang('US_NO_RANK'),
 				'US_TOPICS'		=> $user_topics,
 				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
 			));
