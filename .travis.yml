@@ -4,8 +4,26 @@ language: php
 
 matrix:
   include:
+    - php: 5.3.3
+      env: DB=mysqli
+    - php: 5.4
+      env: DB=mysqli
+    - php: 5.4
+      env: DB=mysql
+    - php: 5.4
+      env: DB=mariadb
+    - php: 5.4
+      env: DB=postgres
+    - php: 5.4
+      env: DB=sqlite3
     - php: 5.5
       env: DB=mysqli
+    - php: 5.6
+      env: DB=mysqli
+    - php: hhvm
+      env: DB=mysqli
+  allow_failures:
+    - php: hhvm
   fast_finish: true
 
 env:
@@ -28,7 +46,7 @@ install:
   - travis/prepare-extension.sh $EXTNAME $PHPBB_BRANCH
   - travis/setup-phpbb.sh $DB $TRAVIS_PHP_VERSION
   - sh -c "if [ '$COVERAGE' != '0' ]; then phpBB/ext/$EXTNAME/travis/prepare-coverage.sh $DB $TRAVIS_PHP_VERSION $EXTNAME; fi"
-  - sh -c "if [ '$EPV' != '0' ] && [ '$TRAVIS_PHP_VERSION' = '5.5' ] && [ '$DB' = 'mysqli' ]; then cd phpBB; composer require phpbb/epv:dev-master --dev --no-interaction; cd ../; fi"
+  - sh -c "if [ '$EPV' != '0' ] && [ '$TRAVIS_PHP_VERSION' = '5.5' ] && [ '$DB' = 'mysqli' ]; then cd phpBB; composer require phpbb/epv:dev-master --no-interaction; cd ../; fi"
 
 before_script:
   - travis/setup-database.sh $DB $TRAVIS_PHP_VERSION
