@@ -88,11 +88,6 @@ class listener implements EventSubscriberInterface
 		{
 			$this->user->add_lang_ext('senky/userstatistics', 'user_statistics');
 
-			if (!function_exists('phpbb_get_user_rank'))
-			{
-				require($this->root_path . 'includes/functions_display.' . $this->php_ext);
-			}
-
 			// topics count
 			$sql = 'SELECT COUNT(topic_poster) as user_topics
 					FROM ' . TOPICS_TABLE . '
@@ -102,6 +97,10 @@ class listener implements EventSubscriberInterface
 			$user_topics = $this->db->sql_fetchfield('user_topics');
 			$this->db->sql_freeresult($result);
 
+			if (!function_exists('phpbb_get_user_rank'))
+			{
+				include($this->root_path . 'includes/functions_display.' . $this->php_ext);
+			}
 			$user_rank = phpbb_get_user_rank($this->user->data, $this->user->data['user_posts']);
 
 			$this->template->assign_vars(array(
