@@ -2,8 +2,8 @@
 	"name": "senky/userstatistics",
 	"type": "phpbb-extension",
 	"description": "This extension will add table at the index page with basic user stats: user IP, user registration date, user ID, number of user posts/topics and name of rank. On smaller screens, stats are hidden.",
-	"version": "1.0.0",
-	"time": "2015-07-28",
+	"version": "1.0.1",
+	"time": "2016-08-30",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "Jakub Senko",
