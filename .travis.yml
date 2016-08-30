@@ -4,26 +4,8 @@ language: php
 
 matrix:
   include:
-    - php: 5.3.3
-      env: DB=mysqli
-    - php: 5.4
-      env: DB=mysqli
-    - php: 5.4
-      env: DB=mysql
-    - php: 5.4
-      env: DB=mariadb
-    - php: 5.4
-      env: DB=postgres
-    - php: 5.4
-      env: DB=sqlite3
     - php: 5.5
       env: DB=mysqli
-    - php: 5.6
-      env: DB=mysqli
-    - php: hhvm
-      env: DB=mysqli
-  allow_failures:
-    - php: hhvm
   fast_finish: true
 
 env:
@@ -58,4 +40,4 @@ script:
   - sh -c "if [ '$EPV' != '0' ] && [ '$TRAVIS_PHP_VERSION' = '5.5' ] && [ '$DB' = 'mysqli' ]; then phpBB/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/'; fi"
 
 after_script:
-  - sh -c "if [ '$COVERAGE' != '0' ]; then phpBB/ext/$EXTNAME/travis/send-coverage.sh $DB $TRAVIS_PHP_VERSION $EXTNAME; fi"
+  - sh -c "if [ '$COVERAGE' != '0' ]; then phpBB/ext/$EXTNAME/travis/send-coverage.sh $DB $TRAVIS_PHP_VERSION; fi"
