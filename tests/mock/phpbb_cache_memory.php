@@ -11,7 +11,7 @@
  *
  */
 
-namespace senky\userstatistics\tests\event;
+namespace senky\userstatistics\tests\mock;
 
 class phpbb_cache_memory extends \phpbb\cache\driver\memory
 {
@@ -62,5 +62,20 @@ class phpbb_cache_memory extends \phpbb\cache\driver\memory
 	{
 		unset($this->data[$var]);
 		return true;
+	}
+
+	public function obtain_ranks()
+	{
+		return array(
+			'normal' 	=> array(),
+			'special'	=> array(
+				1	=> array(
+					'rank_id'		=> 1,
+					'rank_title'	=> 'Site Admin',
+					'rank_special'	=> 1,
+					'rank_image'	=> '',
+				),
+			),
+		);
 	}
 }

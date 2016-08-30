@@ -10,6 +10,10 @@
 
 namespace senky\userstatistics\tests\event;
 
+use senky\userstatistics\tests\mock\phpbb_cache_memory;
+
+require_once __DIR__ . '/../../../../../includes/functions.php';
+
 class listener_test extends \phpbb_database_test_case
 {
 	/**
@@ -26,6 +30,9 @@ class listener_test extends \phpbb_database_test_case
 	protected $listener;
 	protected $sql_user_topics;
 
+	protected $root_path;
+	protected $php_ext;
+	protected $cache;
 	protected $db;
 	protected $template;
 	protected $user;
@@ -47,13 +54,21 @@ class listener_test extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		global $phpbb_extension_manager, $cache, $phpbb_root_path;
+		global $phpbb_extension_manager, $phpbb_dispatcher, $cache, $phpbb_root_path, $phpEx;
+
+		if (!class_exists('phpbb_mock_event_dispatcher'))
+		{
+			require($phpbb_root_path . '../tests/mock/event_dispatcher.' . $phpEx);
+		}
 
 		// Mock some global classes that may be called during code execution
 		$phpbb_extension_manager = new \phpbb_mock_extension_manager($phpbb_root_path);
+		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$cache = new phpbb_cache_memory();
 
 		// Load/Mock classes required by the event listener class
+		$this->root_path = $phpbb_root_path;
+		$this->php_ext = $phpEx;
 		$this->cache = $cache;
 		$this->db = $this->new_dbal();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')->getMock();
@@ -67,6 +82,7 @@ class listener_test extends \phpbb_database_test_case
 		$this->user->data['user_regdate'] = '946684800';
 		$this->user->data['user_id'] = '1';
 		$this->user->data['user_posts'] = '20';
+		$this->user->data['user_rank'] = '1';
 
 		$this->sql_user_topics = 'SELECT COUNT(topic_poster) as user_topics
 								FROM ' . TOPICS_TABLE . '
@@ -79,15 +95,13 @@ class listener_test extends \phpbb_database_test_case
 	 */
 	protected function set_listener()
 	{
-		global $phpbb_root_path, $phpEx;
-
 		$this->listener = new \senky\userstatistics\event\listener(
 			$this->cache,
 			$this->db,
 			$this->template,
 			$this->user,
-			$phpbb_root_path,
-			$phpEx
+			$this->root_path,
+			$this->php_ext
 		);
 	}
 
@@ -127,8 +141,10 @@ class listener_test extends \phpbb_database_test_case
 				'US_REGDATE'	=> '01.01.2000 0:00:00',
 				'US_ID' 		=> '1',
 				'US_POSTS'		=> '20',
+				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
 				'US_RTITLE'		=> 'Site Admin',
 				'US_TOPICS'		=> 3,
+				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
 			));
 
 		$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();

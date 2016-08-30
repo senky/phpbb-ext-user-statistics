@@ -17,15 +17,6 @@
 		</row>
 	</table>
 
-	<table name="phpbb_ranks">
-		<column>rank_id</column>
-		<column>rank_title</column>
-		<row>
-			<value>1</value>
-			<value>Site Admin</value>
-		</row>
-	</table>
-
 	<table name="phpbb_users">
 		<column>user_id</column>
 		<column>user_permissions</column>
