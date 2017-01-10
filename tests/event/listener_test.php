@@ -36,6 +36,7 @@ class listener_test extends \phpbb_database_test_case
 	protected $db;
 	protected $template;
 	protected $user;
+	protected $config;
 
 	/**
 	 * Get data set fixtures
@@ -72,8 +73,11 @@ class listener_test extends \phpbb_database_test_case
 		$this->cache = $cache;
 		$this->db = $this->new_dbal();
 		$this->template = $this->getMockBuilder('\phpbb\template\template')->getMock();
+		$this->config = new \phpbb\config\config(array('version' => '3.2.0'));
 
-		$this->user = new \phpbb\user('\phpbb\datetime');
+		$lang_loader = new \phpbb\language\language_file_loader($phpbb_root_path, $phpEx);
+		$lang = new \phpbb\language\language($lang_loader);
+		$this->user = new \phpbb\user($lang, '\phpbb\datetime');
 		$this->user->timezone = new \DateTimeZone('UTC');
 		$this->user->date_format = 'd.m.Y G:i:s';
 		$this->user->lang['datetime'] = array();
@@ -100,6 +104,7 @@ class listener_test extends \phpbb_database_test_case
 			$this->db,
 			$this->template,
 			$this->user,
+			$this->config,
 			$this->root_path,
 			$this->php_ext
 		);
@@ -137,13 +142,14 @@ class listener_test extends \phpbb_database_test_case
 		$this->template->expects($this->once())
 			->method('assign_vars')
 			->with(array(
+				'S_IS_31'		=> false,
 				'US_IP'			=> '127.0.0.1',
 				'US_REGDATE'	=> '01.01.2000 0:00:00',
 				'US_ID' 		=> '1',
 				'US_POSTS'		=> '20',
 				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
 				'US_RTITLE'		=> 'Site Admin',
-				'US_TOPICS'		=> 3,
+				'US_TOPICS'		=> '3',
 				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
 			));
 
@@ -151,8 +157,9 @@ class listener_test extends \phpbb_database_test_case
 		$dispatcher->addListener('core.index_modify_page_title', array($this->listener, 'set_template_variables'));
 		$dispatcher->dispatch('core.index_modify_page_title');
 
+		// make sure SQL query was fired (and thus cached, having query_id assigned)
 		$query_id = $this->cache->sql_load($this->sql_user_topics);
-		$this->assertInternalType('integer', $query_id);
+		$this->assertInternalType('string', $query_id);
 	}
 
 	/**
