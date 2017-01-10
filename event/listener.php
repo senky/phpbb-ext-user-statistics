@@ -29,6 +29,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\config\config */
+	protected $config;
+
 	/** @var string */
 	protected $root_path;
 
@@ -42,16 +45,18 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface		$db			Database driver
 	 * @param \phpbb\template\template				$template	Template object
 	 * @param \phpbb\user							$user		User object
+	 * @param \phpbb\config\config					$config		Config object
 	 * @param string								$root_path	phpbb root path
 	 * @param string								$php_ext	php ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, $root_path, $php_ext)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext)
 	{
 		$this->cache = $cache;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
+		$this->config = $config;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -104,6 +109,7 @@ class listener implements EventSubscriberInterface
 			$user_rank = phpbb_get_user_rank($this->user->data, $this->user->data['user_posts']);
 
 			$this->template->assign_vars(array(
+				'S_IS_31'		=> version_compare($this->config['version'], '3.2.0', '<'),
 				'US_IP'			=> $this->user->data['user_ip'],
 				'US_REGDATE'	=> $this->user->format_date($this->user->data['user_regdate']),
 				'US_ID'			=> $this->user->data['user_id'],
