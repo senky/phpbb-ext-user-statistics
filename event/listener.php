@@ -114,10 +114,10 @@ class listener implements EventSubscriberInterface
 				'US_REGDATE'	=> $this->user->format_date($this->user->data['user_regdate']),
 				'US_ID'			=> $this->user->data['user_id'],
 				'US_POSTS'		=> $this->user->data['user_posts'],
-				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
+				'U_US_POSTS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
 				'US_RTITLE'		=> ($user_rank['title'] != '') ? $user_rank['title'] : $this->user->lang('US_NO_RANK'),
 				'US_TOPICS'		=> $user_topics,
-				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch&amp;sr=posts'),
+				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
 			));
 		}
 	}
