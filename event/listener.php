@@ -74,9 +74,7 @@ class listener implements EventSubscriberInterface
 			'core.index_modify_page_title'		=> 'set_template_variables',
 			'core.submit_post_end'				=> 'clear_cache',
 			'core.delete_topics_after_query'	=> 'clear_cache',
-			// TODO: another clear_cache call is required when topic is
-			// soft-deleted: \phpbb\content_visibility.php@set_topic_visibility
-			// new core event needed first
+			'core.set_topic_visibility_after'	=> 'clear_cache',
 		);
 	}
 
