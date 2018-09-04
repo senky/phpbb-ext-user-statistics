@@ -4,7 +4,7 @@
 	"description": "This extension will add table at the index page with basic user stats: user IP, user registration date, user ID, number of user posts/topics and name of rank. On smaller screens, stats are hidden.",
 	"version": "2.0.1",
 	"time": "2016-08-30",
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [
 		{
 			"name": "Jakub Senko",
@@ -21,7 +21,7 @@
 	"extra": {
 		"display-name": "User Statistics",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.3.@dev"
+			"phpbb/phpbb": ">=3.2.0,<3.3.@dev"
 		}
 	}
 }
