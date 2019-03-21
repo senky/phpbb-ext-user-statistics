@@ -3,25 +3,25 @@
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
-				<dl class="<!-- IF S_IS_31 -->icon<!-- ELSE -->row-item<!-- ENDIF -->">
-					<dd class="user_statistics">{L_US_USER_IP}</dd>
-					<dd class="user_statistics">{L_US_USER_REGDATE}</dd>
-					<dd class="user_statistics">{L_US_USER_ID}</dd>
-					<dd class="user_statistics">{L_US_USER_POSTS}</dd>
-					<dd class="user_statistics">{L_US_USER_TOPICS}</dd>
-					<dd class="user_statistics">{L_US_USER_RTITLE}</dd>
+				<dl class="user_statistics <!-- IF S_IS_31 -->icon<!-- ELSE -->row-item<!-- ENDIF -->">
+					<dd>{L_US_USER_IP}</dd>
+					<dd>{L_US_USER_REGDATE}</dd>
+					<dd>{L_US_USER_ID}</dd>
+					<dd>{L_US_USER_POSTS}</dd>
+					<dd>{L_US_USER_TOPICS}</dd>
+					<dd>{L_US_USER_RTITLE}</dd>
 				</dl>
 			</li>
 		</ul>
 		<ul class="topiclist forums">
 			<li class="row">
-				<dl>
-					<dd class="user_statistics">{US_IP}</dd>
-					<dd class="user_statistics">{US_REGDATE}</dd>
-					<dd class="user_statistics">{US_ID}</dd>
-					<dd class="user_statistics"><a href="{U_US_POSTS}">{US_POSTS}</a></dd>
-					<dd class="user_statistics"><a href="{U_US_TOPICS}">{US_TOPICS}</a></dd>
-					<dd class="user_statistics">{US_RTITLE}</dd>
+				<dl class="user_statistics">
+					<dd>{US_IP}</dd>
+					<dd>{US_REGDATE}</dd>
+					<dd>{US_ID}</dd>
+					<dd><a href="{U_US_POSTS}">{US_POSTS}</a></dd>
+					<dd><a href="{U_US_TOPICS}">{US_TOPICS}</a></dd>
+					<dd>{US_RTITLE}</dd>
 				</dl>
 			</li>
 		</ul>
