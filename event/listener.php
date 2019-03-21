@@ -97,7 +97,7 @@ class listener implements EventSubscriberInterface
 			// topics count
 			$sql = 'SELECT COUNT(topic_poster) as user_topics
 					FROM ' . TOPICS_TABLE . '
-					WHERE topic_poster = ' . $this->user->data['user_id'] . '
+					WHERE topic_poster = ' . (int) $this->user->data['user_id'] . '
 						AND topic_visibility = ' . ITEM_APPROVED;
 			$result = $this->db->sql_query($sql, 3600);
 			$user_topics = $this->db->sql_fetchfield('user_topics');
