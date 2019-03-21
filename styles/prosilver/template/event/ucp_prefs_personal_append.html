@@ -1,0 +1,7 @@
+<dl>
+	<dt><label for="user_stats_location0">{{ lang('USER_STATISTICS_LOCATION') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label for="user_stats_location1"><input type="radio" name="user_stats_location" id="user_stats_location1" value="1"{% if S_USER_STATISTICS_LOCATION %} checked{% endif %} /> {{ lang('TOP') }}</label>
+		<label for="user_stats_location0"><input type="radio" name="user_stats_location" id="user_stats_location0" value="0"{% if not S_USER_STATISTICS_LOCATION %} checked{% endif %} /> {{ lang('BOTTOM') }}</label>
+	</dd>
+</dl>

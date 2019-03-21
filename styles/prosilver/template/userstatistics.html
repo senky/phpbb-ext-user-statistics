@@ -1,0 +1,30 @@
+{% if S_USER_LOGGED_IN %}
+<div class="forabg" id="user-statistics">
+	<div class="inner">
+		<ul class="topiclist">
+			<li class="header">
+				<dl class="user_statistics {% if S_IS_31 %}icon{% else %}row-item{% endif %}">
+					<dd>{{ lang('US_USER_IP') }}</dd>
+					<dd>{{ lang('US_USER_REGDATE') }}</dd>
+					<dd>{{ lang('US_USER_ID') }}</dd>
+					<dd>{{ lang('US_USER_POSTS') }}</dd>
+					<dd>{{ lang('US_USER_TOPICS') }}</dd>
+					<dd>{{ lang('US_USER_RTITLE') }}</dd>
+				</dl>
+			</li>
+		</ul>
+		<ul class="topiclist forums">
+			<li class="row">
+				<dl class="user_statistics">
+					<dd>{{ US_IP }}</dd>
+					<dd>{{ US_REGDATE }}</dd>
+					<dd>{{ US_ID }}</dd>
+					<dd><a href="{{ U_US_POSTS }}">{{ US_POSTS }}</a></dd>
+					<dd><a href="{{ U_US_TOPICS }}">{{ US_TOPICS }}</a></dd>
+					<dd>{{ US_RTITLE }}</dd>
+				</dl>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endif %}

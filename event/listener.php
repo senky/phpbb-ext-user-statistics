@@ -3,7 +3,7 @@
 *
 * User Statistics extension for the phpBB Forum Software package.
 *
-* @copyright (c) 2015 Jakub Senko <jakubsenko@gmail.com>
+* @copyright (c) 2019 Jakub Senko <jakubsenko@gmail.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 */
@@ -32,6 +32,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\request\request */
+	protected $request;
+
 	/** @var string */
 	protected $root_path;
 
@@ -46,17 +49,19 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\template\template				$template	Template object
 	 * @param \phpbb\user							$user		User object
 	 * @param \phpbb\config\config					$config		Config object
+	 * @param \phpbb\request\request				$request	Request object
 	 * @param string								$root_path	phpbb root path
 	 * @param string								$php_ext	php ext
 	 * @access public
 	 */
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, $root_path, $php_ext)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, \phpbb\request\request $request, $root_path, $php_ext)
 	{
 		$this->cache = $cache;
 		$this->db = $db;
 		$this->template = $template;
 		$this->user = $user;
 		$this->config = $config;
+		$this->request = $request;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -75,6 +80,9 @@ class listener implements EventSubscriberInterface
 			'core.submit_post_end'				=> 'clear_cache',
 			'core.delete_topics_after_query'	=> 'clear_cache',
 			'core.set_topic_visibility_after'	=> 'clear_cache',
+
+			'core.ucp_prefs_personal_data'			=> 'setting_data',
+			'core.ucp_prefs_personal_update_data'	=> 'setting_update',
 		);
 	}
 
@@ -116,6 +124,7 @@ class listener implements EventSubscriberInterface
 				'US_RTITLE'		=> ($user_rank['title'] != '') ? $user_rank['title'] : $this->user->lang('US_NO_RANK'),
 				'US_TOPICS'		=> $user_topics,
 				'U_US_TOPICS'	=> append_sid("{$this->root_path}search.{$this->php_ext}", 'search_id=egosearch'),
+				'US_LOCATION'	=> $this->user->data['user_stats_location'],
 			));
 		}
 	}
@@ -130,5 +139,37 @@ class listener implements EventSubscriberInterface
 	{
 		// sadly, this destroys all cache items for topics table, but phpBB doesn't provide cleaner way
 		$this->cache->destroy('sql', TOPICS_TABLE);
+	}
+
+	/**
+	 * Set user statistics location
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function setting_data($event)
+	{
+		$this->user->add_lang_ext('senky/userstatistics', 'ucp');
+
+		$data = $event['data'];
+		$data['user_stats_location'] = $this->request->variable('user_stats_location', (bool) $this->user->data['user_stats_location']);
+		$event['data'] = $data;
+
+		$this->template->assign_var('S_USER_STATISTICS_LOCATION', $data['user_stats_location']);
+	}
+
+	/**
+	 * Update user statistics location
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function setting_update($event)
+	{
+		$sql_ary = $event['sql_ary'];
+		$sql_ary['user_stats_location'] = $event['data']['user_stats_location'];
+		$event['sql_ary'] = $sql_ary;
 	}
 }
