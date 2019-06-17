@@ -6,6 +6,7 @@
 * @copyright (c) 2019 Jakub Senko <jakubsenko@gmail.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
+* Translated By : Bassel Taha Alhitary <http://www.alhitary.net>
 */
 
 /**
@@ -22,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'USER_STATISTICS_LOCATION'	=> 'Your statistics location',
-	'TOP'						=> 'Top',
-	'BOTTOM'					=> 'Bottom',
+	'USER_STATISTICS_LOCATION'	=> 'موقع الإحصائيات',
+	'TOP'						=> 'أعلى',
+	'BOTTOM'					=> 'أسفل',
 ));

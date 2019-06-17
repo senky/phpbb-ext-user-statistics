@@ -6,7 +6,7 @@
 * @copyright (c) 2015 Jakub Senko <jakubsenko@gmail.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
-* Translated By : Bassel Taha Alhitary - www.alhitary.net
+* Translated By : Bassel Taha Alhitary <http://www.alhitary.net>
 */
 
 /**
