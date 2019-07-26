@@ -110,7 +110,7 @@ class listener implements EventSubscriberInterface
 			$user_rank = phpbb_get_user_rank($this->user->data, $this->user->data['user_posts']);
 
 			$this->template->assign_vars(array(
-				'US_IP'			=> $this->user->data['user_ip'],
+				'US_IP'			=> $this->user->ip,
 				'US_REGDATE'	=> $this->user->format_date($this->user->data['user_regdate']),
 				'US_ID'			=> $this->user->data['user_id'],
 				'US_POSTS'		=> $this->user->data['user_posts'],
